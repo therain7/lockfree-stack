@@ -1,2 +1,7 @@
+[libraries]
+lincheck = { module = "org.jetbrains.kotlinx:lincheck", version = "2.26" }
+junit = { module = "org.junit.jupiter:junit-jupiter", version = "5.10.2" }
+junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
 [plugins]
 jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.23" }
