@@ -4,9 +4,12 @@ import org.jetbrains.kotlinx.lincheck.annotations.Operation
 import org.jetbrains.kotlinx.lincheck.check
 import org.jetbrains.kotlinx.lincheck.strategy.stress.StressOptions
 import org.junit.jupiter.api.Test
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class EliminationBackoffStackTests {
-    private val stack = EliminationBackoffStack<Int>()
+    private val stack =
+        EliminationBackoffStack<Int>(10, 50.toDuration(DurationUnit.MICROSECONDS))
 
     @Operation
     fun top() = stack.top()
