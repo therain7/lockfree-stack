@@ -1,15 +1,14 @@
 package stack
 
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
+import kotlin.time.Duration
 
-private const val CAPACITY = 10
-private const val DURATION_MICRO = 50
-
-class EliminationBackoffStack<T> : Stack<T> {
+class EliminationBackoffStack<T>(
+    private val eliminationArrayCapacity: Int,
+    eliminationMaxDuration: Duration
+) : Stack<T> {
     private val stack = CASStack<T>()
     private val eliminationArray =
-        EliminationArray<T?>(CAPACITY, DURATION_MICRO.toDuration(DurationUnit.MICROSECONDS))
+        EliminationArray<T?>(eliminationArrayCapacity, eliminationMaxDuration)
 
     override fun top() = stack.top()?.value
 
@@ -17,7 +16,7 @@ class EliminationBackoffStack<T> : Stack<T> {
         val node = CASStack.Node(value)
         while (true) {
             if (stack.tryPush(node).isOk()) return
-            eliminationArray.visit(value, CAPACITY).runOk {
+            eliminationArray.visit(value, eliminationArrayCapacity).runOk {
                 if (it == null) return
             }
         }
@@ -26,7 +25,7 @@ class EliminationBackoffStack<T> : Stack<T> {
     override fun pop(): T? {
         while (true) {
             stack.tryPop().runOk { return it?.value }
-            eliminationArray.visit(null, CAPACITY).runOk {
+            eliminationArray.visit(null, eliminationArrayCapacity).runOk {
                 if (it != null) return it
             }
         }
