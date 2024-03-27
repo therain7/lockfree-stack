@@ -5,3 +5,4 @@ plugins {
 
 rootProject.name = "lockfree-stack"
 include("lib")
+include("benchmark")
